@@ -1,6 +1,7 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -432,8 +433,20 @@ public class EvaluationService {
 	 * @return
 	 */
 	public List<Long> calculatePrimeFactorsOf(long l) {
+		List<Long> primes = new ArrayList<Long>();
 		
-		return null;
+		for (long i = 2; i < l; i++) {
+			while (l%i ==0) {
+				l /= i;
+				primes.add(i);
+			}
+		}
+		
+		if (l > 1) {
+			primes.add(l);
+		}
+		
+		return primes;
 	}
 
 	/**
@@ -472,7 +485,22 @@ public class EvaluationService {
 
 		public String rotate(String string) {
 			// TODO Write an implementation for this method declaration
-			return null;
+			char[] arr = string.toCharArray();
+			char num = ' ';
+			for (int i = 0; i < arr.length; i++) {
+				if (!Character.isLetter(arr[i])) {
+					continue;
+				}
+				if (Character.isUpperCase(arr[i])) {
+					num = 'A';
+				} else {
+					num = 'a';
+				}
+				
+				arr[i] = (char) (num + (((arr[i]-num) + key)%26));
+			}
+			
+			return new String(arr);
 		}
 
 	}

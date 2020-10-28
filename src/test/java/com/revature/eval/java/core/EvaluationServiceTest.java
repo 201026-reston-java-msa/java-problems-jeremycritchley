@@ -369,7 +369,7 @@ public class EvaluationServiceTest {
 	 * Question 10
 	 ******************************************************************/
 
-/*	@Test
+	@Test
 	public void testPrimeNumber() {
 		assertEquals(Collections.singletonList(2L), evaluationService.calculatePrimeFactorsOf(2L));
 	}
@@ -398,7 +398,7 @@ public class EvaluationServiceTest {
 	 * Question 11
 	 ******************************************************************/
 
-/*	@Test
+	@Test
 	public void rotateSingleCharacterWithWrapAround() {
 		EvaluationService.RotationalCipher rotationalCipher = new EvaluationService.RotationalCipher(13);
 		assertEquals("a", rotationalCipher.rotate("n"));
