@@ -135,10 +135,13 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-
+		int[] values = {1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
+		char[] arr = string.toLowerCase().toCharArray();
+		
 		int score = 0;
 		for (int i = 0; i < string.length(); i++) {
-			score += scoreLetter(string.charAt(i));
+			score += values[(arr[i] - 'a')];
+			//score += scoreLetter(string.charAt(i));
 		}
 		return score;
 	}
@@ -369,6 +372,7 @@ public class EvaluationService {
 				sb.append(sb.charAt(0));
 				sb.deleteCharAt(0);
 			}
+			
 			if (sb.charAt(sb.length()-1) == 'q') {
 				if (sb.charAt(0) == 'u') {
 					sb.append('u');
@@ -484,10 +488,11 @@ public class EvaluationService {
 		}
 
 		public String rotate(String string) {
-			// TODO Write an implementation for this method declaration
+
 			char[] arr = string.toCharArray();
-			char num = ' ';
+			char num = ' ';		// starting index
 			for (int i = 0; i < arr.length; i++) {
+				
 				if (!Character.isLetter(arr[i])) {
 					continue;
 				}
@@ -497,6 +502,7 @@ public class EvaluationService {
 					num = 'a';
 				}
 				
+				// char = start index + 
 				arr[i] = (char) (num + (((arr[i]-num) + key)%26));
 			}
 			
@@ -518,8 +524,52 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int calculateNthPrime(int i) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		
+		if (i < 1) {
+			throw new IllegalArgumentException();
+		} else if (i == 1) {
+			return 2;
+		}
+		
+		int numPrimes = 2;
+		int primeValue = 3;
+		int cur = 3;
+		boolean isPrime;
+		
+		while (numPrimes < i) {
+			isPrime = true;
+			
+			// add 2 because primes can only be odd
+			cur += 2;
+			
+			/*
+			 * k = 3 : 
+			 * 	highest possible odd divisor greater than 1
+			 * k < (cur/k):
+			 * 	decrease cur by factor of k
+			 * 	for k to be evenly divisible by cur, it must be multiplied by k/cur
+			 * 	knowing that k is not a factor, we know that anything greater than
+			 * 	k/cur would result in a number greater than cur																		
+			 * k+=2 : 
+			 * 	we are not checking even divisors since cur cannot be even
+			 */
+			for (int k = 3; k < (cur/k) + 1; k += 2) {
+				
+				if (cur%k == 0 ) {
+					isPrime = false;
+					break;
+				}
+			}
+			
+			if (isPrime) {
+				numPrimes++;
+				primeValue = cur;
+			}
+			
+		}
+		
+		
+		return primeValue;
 	}
 
 	/**
@@ -555,8 +605,32 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String encode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			
+			string = string.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+			
+			StringBuilder sb = new StringBuilder();
+			char[] toArr = string.toCharArray();
+			
+			for (int i = 0; i < toArr.length; ) {
+				if (Character.isLetter(toArr[i])) {
+					sb.append((char) ('z' - (toArr[i] - 'a')));
+				} else {
+					sb.append(toArr[i]);
+				}
+				
+				i++;
+				
+				if (i%5 == 0) {
+					sb.append(' ');
+				}
+				
+			}
+			
+			if (sb.charAt(sb.length() -1) == ' ') {
+				sb.deleteCharAt(sb.length() - 1);
+			}
+			
+			return sb.toString();
 		}
 
 		/**
@@ -566,8 +640,18 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String decode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			string = string.replaceAll("\\W+", "");
+
+			char[] toArr = string.toCharArray();
+			
+			for (int i = 0; i < toArr.length; i++) {
+				if (Character.isLetter(toArr[i])) {
+					toArr[i] = (char) ('a' + ('z' - toArr[i]));
+				}
+				
+			}
+			
+			return new String(toArr);
 		}
 	}
 
@@ -594,8 +678,27 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isValidIsbn(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+
+		char[] arr = string.replaceAll("[^A-Za-z0-9]", "").toLowerCase().toCharArray();
+		
+		int result = 0;
+		
+		if (arr.length != 10) {
+			return false;
+		}
+		
+		for (int i = 0; i < 10; i++) {
+			if (Character.isDigit(arr[i])) {
+				result += (10 - i) * Character.getNumericValue(arr[i]);
+			} else if (i == 9 && arr[i] == 'x') {
+				result += 10;
+			} else {
+				return false;
+			}
+		}
+		
+		
+		return (result % 11) == 0;
 	}
 
 	/**
@@ -613,7 +716,21 @@ public class EvaluationService {
 	 */
 	public boolean isPangram(String string) {
 		// TODO Write an implementation for this method declaration
-		return false;
+		char[] arr = string.replaceAll("[^A-Za-z]", "").toLowerCase().toCharArray();		
+
+		List<Character> chars = new ArrayList<Character>();
+		
+		for (char c: arr) {
+			if (!chars.contains(c)) {
+				chars.add(c);
+			}
+		}
+		
+		if (chars.size() != 26) {
+			return false;
+		}
+			
+		return true;
 	}
 
 	/**
@@ -643,8 +760,35 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getSumOfMultiples(int i, int[] set) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+
+		int sum = 0;
+		
+		for (int j = 0; j < set.length; j++) {
+			
+			int num = set[j];
+			System.out.println(num);
+			boolean add = true;
+			
+			while (num < i) {
+				add = true;
+				
+				for (int k = 0; k < j; k++) {
+					if (num % set[k] == 0) {
+						add = false;
+					}
+				}
+				
+				if (add) {
+					sum += num;
+				}
+				
+				num += set[j];
+			}
+		}
+		
+		System.out.println(sum);
+		
+		return sum;
 	}
 
 	/**
